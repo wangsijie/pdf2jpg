@@ -1,0 +1,13 @@
+{
+  "name": "pdf2jpg-vercel",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "wangsijie",
+  "license": "MIT",
+  "dependencies": {
+    "pdf2jpg": "^0.1.0"
+  },
+  "scripts": {
+    "now-build": "cp lib/*so.1 node_modules/canvas/build/Release/ && node build.js"
+  }
+}

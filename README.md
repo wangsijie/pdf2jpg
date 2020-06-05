@@ -2,6 +2,12 @@
 
 Convert PDF pages to a single jpg by using pdf.js and node-canvas.
 
+## Online demo
+
+https://pdf2jpg.sijie.wang/?url={url_for_pdf_file}
+
+e.g. https://pdf2jpg.sijie.wang/?url=https://pdf2jpg.sijie.wang/sample.pdf
+
 ## Installation
 
 Require canvas, see [https://github.com/Automattic/node-canvas](https://github.com/Automattic/node-canvas) for installation guide.

@@ -1,0 +1,8 @@
+{
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/api/pdf2jpg$1"
+        }
+    ]
+}
