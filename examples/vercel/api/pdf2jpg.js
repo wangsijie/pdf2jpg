@@ -7,5 +7,6 @@ export default async (req, res) => {
     }
     const buffer = await converter(url);
     res.setHeader('content-type', 'image/jpeg');
+    res.setHeader('cache-control', 's-max-age=0');
     res.send(buffer);
 }
