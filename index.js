@@ -1,8 +1,6 @@
 const pdfjsLib = require("pdfjs-dist/es5/build/pdf.js");
 const { createCanvas } = require('canvas');
 
-const scale = 1;
-
 class CanvasFactory {
     create(width, height) {
         const canvas = createCanvas(width, height);
@@ -48,12 +46,12 @@ class Draw {
     }
 }
 
-async function app(pdfData) {
+async function app(pdfData, options = { scale: 1 }) {
     const doc = await pdfjsLib.getDocument(pdfData).promise;
     const draw = new Draw();
     for (let i = 0; i < doc.numPages; i++) {
         const page = await doc.getPage(i + 1);
-        const viewport = page.getViewport({ scale });
+        const viewport = page.getViewport({ scale: options.scale });
         const canvasFactory = new CanvasFactory();
         const { canvas, context } = canvasFactory.create(viewport.width, viewport.height);
         const renderContext = { canvasContext: context, viewport, canvasFactory };
