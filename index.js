@@ -22,7 +22,9 @@ class CanvasFactory {
 }
 
 class Draw {
-    pages = [];
+    constructor() {
+        this.pages = [];
+    }
     init() {
         const width = this.pages[0].width;
         const height = this.pages.reduce((p, page) => p + page.height, 0);
@@ -46,17 +48,26 @@ class Draw {
     }
 }
 
-async function app(pdfData, options = { scale: 1 }) {
+async function app(pdfData, options = {}) {
+    const scale = options.scale || 1;
+    const pageNumber = options.page || 0;
     const doc = await pdfjsLib.getDocument(pdfData).promise;
     const draw = new Draw();
-    for (let i = 0; i < doc.numPages; i++) {
-        const page = await doc.getPage(i + 1);
-        const viewport = page.getViewport({ scale: options.scale });
+    const processPage = async (pageNumber) => {
+        const page = await doc.getPage(pageNumber);
+        const viewport = page.getViewport({ scale });
         const canvasFactory = new CanvasFactory();
         const { canvas, context } = canvasFactory.create(viewport.width, viewport.height);
         const renderContext = { canvasContext: context, viewport, canvasFactory };
         await page.render(renderContext).promise;
         draw.putPage(canvas);
+    }
+    if (!pageNumber) {
+        for (let i = 0; i < doc.numPages; i++) {
+            await processPage(i + 1);
+        }
+    } else {
+        await processPage(pageNumber);
     }
     draw.draw();
     return draw.getBuffer();

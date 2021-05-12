@@ -26,6 +26,8 @@ const fs = require('fs');
 
 const source = fs.readFileSync('test.pdf'); // can be buffer or just url
 pdf2jpg(source).then(buffer => fs.writeFileSync('out.jpg', buffer))
+// page 1 only (starts from 1)
+pdf2jpg(source, { page: 1 }).then(buffer => fs.writeFileSync('out-page-1.jpg', buffer))
 ```
 
 ## Thanks to
