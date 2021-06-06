@@ -22,22 +22,23 @@ class CanvasFactory {
 }
 
 class Draw {
-    constructor() {
+    constructor(width, height) {
         this.pages = [];
+        this.width = width;
+        this.height = height;
     }
     init() {
-        const width = this.pages[0].width;
-        const height = this.pages.reduce((p, page) => p + page.height, 0);
-        this.canvas = createCanvas(width, height);
+        this.canvas = createCanvas(this.width, this.height);
         this.context = this.canvas.getContext('2d');
-        this.height = height;
     }
     draw() {
         this.init();
-        let height = this.height;
+        let currentY = this.height;
         for (const page of this.pages.reverse()) {
-            height -= page.height;
-            this.context.drawImage(page, 0, height);
+            currentY -= page.height;
+            const x = (this.width - page.width) / 2;
+            const y = currentY;
+            this.context.drawImage(page, x, y);
         }
     }
     getBuffer() {
@@ -52,22 +53,35 @@ async function app(pdfData, options = {}) {
     const scale = options.scale || 1;
     const pageNumber = options.page || 0;
     const doc = await pdfjsLib.getDocument(pdfData).promise;
-    const draw = new Draw();
-    const processPage = async (pageNumber) => {
-        const page = await doc.getPage(pageNumber);
+    const pages = [];
+    let width = 0;
+    let height = 0;
+    for (let i = 0; i < doc.numPages; i++) {
+        const page = await doc.getPage(i + 1);
         const viewport = page.getViewport({ scale });
+        if (viewport.width > width) {
+            width = Math.ceil(viewport.width);
+        }
+        height += Math.ceil(viewport.height);
+        pages.push({
+            page,
+            viewport,
+        });
+    }
+    const draw = new Draw(width, height);
+    const processPage = async (pageObject) => {
+        const { page, viewport } = pageObject;
         const canvasFactory = new CanvasFactory();
         const { canvas, context } = canvasFactory.create(viewport.width, viewport.height);
         const renderContext = { canvasContext: context, viewport, canvasFactory };
         await page.render(renderContext).promise;
         draw.putPage(canvas);
     }
-    if (!pageNumber) {
-        for (let i = 0; i < doc.numPages; i++) {
-            await processPage(i + 1);
+    for (let i = 0; i < pages.length; i++) {
+        if (pageNumber && pageNumber !== i + 1) {
+            continue;
         }
-    } else {
-        await processPage(pageNumber);
+        await processPage(pages[i]);
     }
     draw.draw();
     return draw.getBuffer();

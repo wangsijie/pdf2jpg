@@ -30,6 +30,13 @@ pdf2jpg(source).then(buffer => fs.writeFileSync('out.jpg', buffer))
 pdf2jpg(source, { page: 1 }).then(buffer => fs.writeFileSync('out-page-1.jpg', buffer))
 ```
 
+## Development
+
+```
+docker build -t pdf2jpg .
+docker run -it -v $(pwd):/app pdf2jpg
+```
+
 ## Thanks to
 
 [https://github.com/mozilla/pdf.js/blob/master/examples/node/pdf2png/pdf2png.js](https://github.com/mozilla/pdf.js/blob/master/examples/node/pdf2png/pdf2png.js)
