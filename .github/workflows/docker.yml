@@ -1,0 +1,23 @@
+name: docker
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CI: true
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: build
+      run: docker build -t ghcr.io/wangsijie/pdf2jpg .
+    - name: push
+      run: docker push ghcr.io/wangsijie/pdf2jpg
