@@ -1,6 +1,6 @@
 {
   "name": "pdf2jpg",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "main": "index.js",
   "repository": "git@github.com:wangsijie/pdf2jpg.git",
   "author": "wangsijie <i@sijie.wang>",
@@ -8,6 +8,6 @@
   "private": false,
   "dependencies": {
     "canvas": "^2.6.1",
-    "pdfjs-dist": "^2.4.456"
+    "pdfjs-dist": "2.4.456"
   }
 }
