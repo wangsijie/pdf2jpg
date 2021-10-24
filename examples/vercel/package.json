@@ -5,7 +5,7 @@
   "author": "wangsijie",
   "license": "MIT",
   "dependencies": {
-    "pdf2jpg": "^0.1.0"
+    "pdf2jpg": "^0.4.2"
   },
   "scripts": {
     "now-build": "cp lib/*so.1 node_modules/canvas/build/Release/ && node build.js"
